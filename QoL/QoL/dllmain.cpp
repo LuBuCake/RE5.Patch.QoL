@@ -1,5 +1,6 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
+#include "Hooks.h"
 
 /* ---------------- LIN + Type C ---------------- */
 
@@ -152,7 +153,7 @@ DWORD WINAPI MainThread(LPVOID param)
 
     if (!Game::ValidateGameVersion())
     {
-        MessageBox(0, "Unsupported game version, mod disabled.", "Resident Evil 5 - Quality of Life Patches", MB_ICONINFORMATION);
+        MessageBox(0, L"Unsupported game version, mod disabled.", L"Resident Evil 5 - Quality of Life Patches", MB_ICONINFORMATION);
 
         Sleep(100);
         FreeLibraryAndExitThread((HMODULE)param, 0);
@@ -471,6 +472,8 @@ DWORD WINAPI MainThread(LPVOID param)
     *(DWORD*)((DWORD)&kb_inventory_letgo_imm_ab[38]) = JB;
     JB = 0x00A0FC61 - ((DWORD)&kb_inventory_letgo_imm_ab[49] + 4);
     *(DWORD*)((DWORD)&kb_inventory_letgo_imm_ab[49]) = JB;
+
+    Mod::Hooks::Initialize();
 
     return 0;
 }

@@ -9,3 +9,5 @@
 #include <string>
 #include "game.h"
 #include "Mem.h"
+#include "Hooks.h"
+#include "Utils.h"
