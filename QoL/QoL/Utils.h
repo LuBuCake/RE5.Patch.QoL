@@ -9,5 +9,6 @@ namespace Mod
 		public:
 
 			static bool Hook(LPVOID ToHook, LPVOID Hook, LPVOID JumpBack, int Length);
+			static DWORD GetThreadID(int ID);
 	};
 }

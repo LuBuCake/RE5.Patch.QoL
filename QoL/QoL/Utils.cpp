@@ -24,3 +24,34 @@ bool Utils::Hook(LPVOID ToHook, LPVOID Hook, LPVOID JumpBack, int Length)
 
 	return true;
 }
+
+DWORD Utils::GetThreadID(int ID)
+{
+	HANDLE Toolhelp32Snapshot;
+	THREADENTRY32 ThreadEntry;
+
+	Toolhelp32Snapshot = CreateToolhelp32Snapshot(4u, 0);
+
+	if (Toolhelp32Snapshot == (HANDLE)-1)
+		return 0;
+
+	ThreadEntry.dwSize = 28;
+
+	if (!Thread32First(Toolhelp32Snapshot, &ThreadEntry))
+	{
+		CloseHandle(Toolhelp32Snapshot);
+		return 0;
+	}
+
+	while (ThreadEntry.th32OwnerProcessID != ID)
+	{
+		if (!Thread32Next(Toolhelp32Snapshot, &ThreadEntry))
+		{
+			CloseHandle(Toolhelp32Snapshot);
+			return 0;
+		}
+	}
+
+	CloseHandle(Toolhelp32Snapshot);
+	return ThreadEntry.th32ThreadID;
+}

@@ -149,10 +149,25 @@ BYTE kb_inventory_letgo_imm_ab[] = { 0xA1, 0xB8, 0x31, 0x1A, 0x01, 0x8B, 0x0D, 0
 
 DWORD WINAPI MainThread(LPVOID param)
 {
-    Sleep(2000);
+    Sleep(1000);
+
+    DWORD ThreadID = Mod::Utils::GetThreadID((int)GetCurrentProcessId());
+    HANDLE MainThread = OpenThread(0x5Au, FALSE, ThreadID);
+
+    if (MainThread == NULL || SuspendThread(MainThread) == -1)
+    {
+        MessageBox(0, L"Thread suspension failed, mod disabled.", L"Resident Evil 5 - Quality of Life Patches", MB_ICONINFORMATION);
+
+        Sleep(100);
+        FreeLibraryAndExitThread((HMODULE)param, 0);
+
+        return 0;
+    }
 
     if (!Game::ValidateGameVersion())
     {
+        ResumeThread(MainThread);
+
         MessageBox(0, L"Unsupported game version, mod disabled.", L"Resident Evil 5 - Quality of Life Patches", MB_ICONINFORMATION);
 
         Sleep(100);
@@ -474,6 +489,9 @@ DWORD WINAPI MainThread(LPVOID param)
     *(DWORD*)((DWORD)&kb_inventory_letgo_imm_ab[49]) = JB;
 
     Mod::Hooks::Initialize();
+
+    ResumeThread(MainThread);
+    CloseHandle(MainThread);
 
     return 0;
 }

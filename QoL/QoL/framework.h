@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <psapi.h>
 #include <processthreadsapi.h>
+#include <TlHelp32.h>
 #include <tchar.h>
 #include <string>
 #include "game.h"

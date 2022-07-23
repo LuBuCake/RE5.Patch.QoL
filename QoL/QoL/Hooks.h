@@ -76,6 +76,5 @@ namespace Mod
 		public:
 
 			static void Initialize();
-			static void OfflineCommands(bool Enable);
 	};
 }
